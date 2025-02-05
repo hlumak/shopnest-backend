@@ -1,7 +1,24 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Param, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
+import { CurrentUser } from './decorators/user.decorator';
+import { Auth } from '../auth/decorators/auth.decorator';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Auth()
+  @Get('profile')
+  async getProfile(@CurrentUser('id') id: string) {
+    return this.userService.getById(id);
+  }
+
+  @Auth()
+  @Patch('profile/favorites/:productId')
+  async toggleFavorite(
+    @CurrentUser('id') userId: string,
+    @Param('productId') productId: string
+  ) {
+    return this.userService.toggleFavorite(productId, userId);
+  }
 }
