@@ -15,13 +15,13 @@ export class CategoryService {
   }
 
   async getById(id: string) {
-    const color = await this.prisma.category.findUnique({
+    const category = await this.prisma.category.findUnique({
       where: { id }
     });
 
-    if (!color) throw new NotFoundException('Category not found');
+    if (!category) throw new NotFoundException('Category not found');
 
-    return color;
+    return category;
   }
 
   async create(storeId: string, dto: CategoryDto) {
