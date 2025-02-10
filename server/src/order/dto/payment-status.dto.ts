@@ -1,12 +1,8 @@
-class AmountPayment {
-  value: string;
-  currency: string;
-}
-
 class ObjectPayment {
   id: string;
   status: string;
-  amount: AmountPayment;
+  amount: number;
+  currency: string;
   payment_method: {
     type: string;
     id: string;
