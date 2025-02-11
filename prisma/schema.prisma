@@ -16,7 +16,7 @@ model User {
   password String?
 
   name    String @default("Unknown")
-  picture String @default("/uploads/no-user-image.png")
+  picture String @default("/uploads/no-user-image.webp")
 
   stores    Store[]
   favorites Favorite[]
