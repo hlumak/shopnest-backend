@@ -1,2 +1,2 @@
-# shop-nest
-Online shop with CMS
+# shopnest-backend
+Backend of my marketplace
