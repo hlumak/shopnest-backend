@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { LiqpayService } from './service/liqpay.service';
 import { OrderDto } from './dto/order.dto';
+import { EnumOrderStatus } from '@prisma/client';
 
 @Injectable()
 export class OrderService {
@@ -10,7 +11,7 @@ export class OrderService {
     private liqpayService: LiqpayService
   ) {}
 
-  createPayment(dto: OrderDto, userId: string) {
+  async createPayment(dto: OrderDto, userId: string) {
     const orderItems = dto.items.map(item => ({
       quantity: item.quantity,
       price: item.price,
@@ -30,7 +31,7 @@ export class OrderService {
       return acc + item.price * item.quantity;
     }, 0);
 
-    const order = this.prisma.order.create({
+    const order = await this.prisma.order.create({
       data: {
         status: dto.status,
         items: {
@@ -52,5 +53,21 @@ export class OrderService {
       description: `Order payment in ShopNest. Payment id: #${order.id}`,
       orderId: order.id
     });
+  }
+
+  async updateStatus(paymentData) {
+    const { order_id, status } = paymentData;
+
+    let orderStatus = EnumOrderStatus.PENDING;
+    if (status === 'success') orderStatus = EnumOrderStatus.PAYED;
+    else if (status === 'failure' || status === 'error')
+      orderStatus = EnumOrderStatus.FAILED;
+
+    await this.prisma.order.update({
+      where: { id: order_id },
+      data: { status: orderStatus }
+    });
+
+    console.log(`Order ${order_id} updated to status: ${orderStatus}`);
   }
 }

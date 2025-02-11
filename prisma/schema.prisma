@@ -18,9 +18,8 @@ model User {
   name    String @default("Unknown")
   picture String @default("/uploads/no-user-image.png")
 
-  stores Store[]
-
-  favorites Product[]
+  stores    Store[]
+  favorites Favorite[]
   reviews   Review[]
   orders    Order[]
 
@@ -35,8 +34,8 @@ model Store {
   title       String
   description String?
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
 
   products   Product[]
   categories Category[]
@@ -59,20 +58,29 @@ model Product {
 
   reviews    Review[]
   orderItems OrderItem[]
+  favorites  Favorite[]
 
-  store   Store?  @relation(fields: [storeId], references: [id])
-  storeId String? @map("store_id")
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId String @map("store_id")
 
-  category   Category? @relation(fields: [categoryId], references: [id])
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   categoryId String?   @map("category_id")
 
-  color   Color?  @relation(fields: [colorId], references: [id])
+  color   Color?  @relation(fields: [colorId], references: [id], onDelete: SetNull)
   colorId String? @map("color_id")
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @map("user_id")
-
   @@map("product")
+}
+
+model Favorite {
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String  @map("product_id")
+
+  @@id([userId, productId])
+  @@map("favorite")
 }
 
 model Category {
@@ -85,8 +93,8 @@ model Category {
 
   products Product[]
 
-  store   Store?  @relation(fields: [storeId], references: [id])
-  storeId String? @map("store_id")
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId String @map("store_id")
 
   @@map("category")
 }
@@ -101,8 +109,8 @@ model Color {
 
   products Product[]
 
-  store   Store?  @relation(fields: [storeId], references: [id])
-  storeId String? @map("store_id")
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId String @map("store_id")
 
   @@map("color")
 }
@@ -115,13 +123,13 @@ model Review {
   text   String
   rating Int
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
 
-  product   Product? @relation(fields: [productId], references: [id])
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String?  @map("product_id")
 
-  store   Store?  @relation(fields: [storeId], references: [id])
+  store   Store?  @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId String? @map("store_id")
 
   @@map("review")
@@ -137,8 +145,8 @@ model Order {
   items OrderItem[]
   total Int
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
 
   @@map("order")
 }
@@ -151,19 +159,20 @@ model OrderItem {
   quantity Int
   price    Int
 
-  order   Order?  @relation(fields: [orderId], references: [id])
-  orderId String? @map("order_id")
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String @map("order_id")
 
-  product   Product? @relation(fields: [productId], references: [id])
-  productId String?  @map("product_id")
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String  @map("product_id")
 
-  store   Store?  @relation(fields: [storeId], references: [id])
-  storeId String? @map("store_id")
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId String @map("store_id")
 
   @@map("order_item")
 }
 
 enum EnumOrderStatus {
   PENDING
-  PAYED
+  PAID
+  FAILED
 }

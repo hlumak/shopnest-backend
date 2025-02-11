@@ -1,18 +1,10 @@
-class ObjectPayment {
+export class ObjectPayment {
   id: string;
-  status: string;
   amount: number;
   currency: string;
-  payment_method: {
-    type: string;
-    id: string;
-    saved: boolean;
-    title: string;
-    card: object;
-  };
-  created_at: string;
-  expires_at: string;
   description: string;
+  returnUrl: string;
+  confirmationUrl: string;
 }
 
 export class PaymentStatusDto {
