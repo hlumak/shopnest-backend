@@ -1,8 +1,9 @@
 import * as crypto from 'crypto';
-import * as process from 'node:process';
+import { CheckoutDto } from '../dto/checkout.dto';
+import { CheckoutOptions } from '../checkout-options.interface';
 
 export class LiqpayService {
-  createCheckout(options) {
+  createCheckout(options: CheckoutOptions): CheckoutDto {
     const { action, amount, currency, description, orderId } = options;
 
     const checkout = {
@@ -14,7 +15,7 @@ export class LiqpayService {
       description,
       order_id: orderId,
       result_url: `${process.env.CLIENT_URL}/thanks`,
-      server_url: `https://7bfb-91-196-120-10.ngrok-free.app/orders/status`
+      server_url: `${process.env.SERVER_URL}/orders/status`
     };
 
     const jsonString = JSON.stringify(checkout);
@@ -31,9 +32,9 @@ export class LiqpayService {
     return {
       amount: checkout.amount,
       currency: checkout.currency,
-      desription: checkout.description,
-      return_url: checkout.result_url,
-      confirmation_url: `https://www.liqpay.ua/api/3/checkout?data=${encodeURIComponent(data)}&signature=${encodeURIComponent(signature)}`
+      description: checkout.description,
+      resultUrl: checkout.result_url,
+      paymentUrl: `https://www.liqpay.ua/api/3/checkout?data=${encodeURIComponent(data)}&signature=${encodeURIComponent(signature)}`
     };
   }
 }

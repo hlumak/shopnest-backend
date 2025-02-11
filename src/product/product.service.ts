@@ -120,17 +120,17 @@ export class ProductService {
     return this.prisma.product.findMany({
       where: {
         category: {
-          title: currentProduct.category.title
+          title: currentProduct.category?.title
         },
         NOT: {
           id: currentProduct.id
-        },
-        orderBy: {
-          createdAt: 'desc'
-        },
-        include: {
-          category: true
         }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      include: {
+        category: true
       }
     });
   }

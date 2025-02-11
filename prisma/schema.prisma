@@ -19,7 +19,7 @@ model User {
   picture String @default("/uploads/no-user-image.webp")
 
   stores    Store[]
-  favorites Favorite[]
+  favorites UserFavorite[]
   reviews   Review[]
   orders    Order[]
 
@@ -58,7 +58,7 @@ model Product {
 
   reviews    Review[]
   orderItems OrderItem[]
-  favorites  Favorite[]
+  favorites  UserFavorite[]
 
   store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId String @map("store_id")
@@ -72,7 +72,7 @@ model Product {
   @@map("product")
 }
 
-model Favorite {
+model UserFavorite {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
 
@@ -80,7 +80,7 @@ model Favorite {
   productId String  @map("product_id")
 
   @@id([userId, productId])
-  @@map("favorite")
+  @@map("user_favorite")
 }
 
 model Category {

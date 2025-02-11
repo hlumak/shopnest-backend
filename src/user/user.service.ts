@@ -8,40 +8,48 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getById(id: string) {
-    const user = await this.prisma.user.findUnique({
+    return this.prisma.user.findUnique({
       where: { id },
-      include: { stores: true, favorites: true, orders: true }
+      include: {
+        stores: true,
+        favorites: { select: { product: true } },
+        orders: true
+      }
     });
-
-    return user;
   }
 
   async getByEmail(email: string) {
-    const user = await this.prisma.user.findUnique({
+    return this.prisma.user.findUnique({
       where: { email },
-      include: { stores: true, favorites: true, orders: true }
+      include: {
+        stores: true,
+        favorites: { select: { product: true } },
+        orders: true
+      }
     });
-
-    return user;
   }
 
   async toggleFavorite(productId: string, userId: string) {
-    const user = await this.getById(userId);
-
-    const isExists = user.favorites.some(product => product.id === productId);
-
-    await this.prisma.user.update({
+    const favorite = await this.prisma.userFavorite.findUnique({
       where: {
-        id: user.id
-      },
-      data: {
-        favorites: {
-          [isExists ? 'disconnect' : 'connect']: {
-            id: productId
-          }
-        }
+        userId_productId: { userId, productId }
       }
     });
+
+    if (favorite) {
+      await this.prisma.userFavorite.delete({
+        where: {
+          userId_productId: { userId, productId }
+        }
+      });
+    } else {
+      await this.prisma.userFavorite.create({
+        data: {
+          userId,
+          productId
+        }
+      });
+    }
 
     return true;
   }
