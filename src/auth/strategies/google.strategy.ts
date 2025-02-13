@@ -5,16 +5,27 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
-  constructor(private configService: ConfigService) {
+  constructor(configService: ConfigService) {
+    const clientID = configService.get<string>('GOOGLE_CLIENT_ID');
+    const clientSecret = configService.get<string>('GOOGLE_CLIENT_SECRET');
+    const callbackURL =
+      configService.get<string>('SERVER_URL') + '/auth/google/callback';
+
+    if (!clientID || !clientSecret) {
+      throw new Error('Google client ID and secret must be defined');
+    }
+
     super({
-      clientID: configService.get('GOOGLE_CLIENT_ID'),
-      clientSecret: configService.get('GOOGLE_CLIENT_SECRET'),
-      callbackURL: configService.get('SERVER_URL') + '/auth/google/callback',
-      scope: ['profile', 'email']
+      clientID,
+      clientSecret,
+      callbackURL,
+      scope: ['profile', 'email'],
+      passReqToCallback: true
     });
   }
 
   validate(
+    _req: any,
     _accessToken: string,
     _refreshToken: string,
     profile: Profile,
@@ -23,9 +34,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     const { displayName, emails, photos } = profile;
 
     const user = {
-      email: emails[0].value,
+      email: emails ? emails[0].value : null,
       name: displayName,
-      picture: photos[0].value
+      picture: photos ? photos[0].value : null
     };
 
     done(null, user);

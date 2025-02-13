@@ -42,11 +42,14 @@ export class AuthService {
   }
 
   async getNewTokens(refreshToken: string) {
-    const result = await this.jwt.verifyAsync(refreshToken);
+    const result = await this.jwt.verifyAsync<{ id: string }>(refreshToken);
 
     if (!result) throw new UnauthorizedException('Invalid refresh token');
 
     const user = await this.userService.getById(result.id);
+
+    if (!user) throw new NotFoundException('User not found');
+
     const tokens = this.issueTokens(user.id);
 
     return { user, ...tokens };
@@ -74,7 +77,9 @@ export class AuthService {
     return user;
   }
 
-  async validateOAuthLogin(req: any) {
+  async validateOAuthLogin(req: {
+    user: { email: string; name: string; picture: string };
+  }) {
     let user = await this.userService.getByEmail(req.user.email);
 
     if (!user) {
@@ -86,7 +91,11 @@ export class AuthService {
         },
         include: {
           stores: true,
-          favorites: true,
+          favorites: {
+            include: {
+              product: true
+            }
+          },
           orders: true
         }
       });

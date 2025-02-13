@@ -13,8 +13,9 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
+import { RequestWithCookies } from './request-with-cookies.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -49,7 +50,7 @@ export class AuthController {
   @HttpCode(200)
   @Post('login/access-token')
   async getNewTokens(
-    @Req() req: Request,
+    @Req() req: RequestWithCookies,
     @Res({ passthrough: true }) res: Response
   ) {
     const refreshTokenFromCookies =
@@ -77,12 +78,15 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  async googleAuth(@Req() req) {}
+  async googleAuth() {}
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthCallback(
-    @Req() req,
+    @Req()
+    req: {
+      user: { email: string; name: string; picture: string };
+    },
     @Res({ passthrough: true }) res: Response
   ) {
     const { refreshToken, ...response } =
