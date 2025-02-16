@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -30,7 +31,7 @@ export class StoreController {
   }
 
   @UsePipes(new ValidationPipe())
-  @HttpCode(200)
+  @HttpCode(HttpStatus.CREATED)
   @Auth()
   @Post()
   async create(@CurrentUser('id') userId: string, @Body() dto: CreateStoreDto) {
@@ -38,7 +39,7 @@ export class StoreController {
   }
 
   @UsePipes(new ValidationPipe())
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Auth()
   @Put(':id')
   async update(
@@ -49,7 +50,7 @@ export class StoreController {
     return this.storeService.update(storeId, userId, dto);
   }
 
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Auth()
   @Delete(':id')
   async delete(

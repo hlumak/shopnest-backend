@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   HttpCode,
+  HttpStatus,
   Post,
   UsePipes,
   ValidationPipe
@@ -19,14 +20,14 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @UsePipes(new ValidationPipe())
-  @HttpCode(200)
+  @HttpCode(HttpStatus.CREATED)
   @Auth()
   @Post('place')
   async checkout(@Body() dto: OrderDto, @CurrentUser('id') userId: string) {
     return this.orderService.createPayment(dto, userId);
   }
 
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Post('status')
   async updateStatus(@Body() body: RequestOrderStatusDto) {
     const { data, signature } = body;

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   Post,
   UsePipes,
@@ -25,7 +26,7 @@ export class ReviewController {
   }
 
   @UsePipes(new ValidationPipe())
-  @HttpCode(200)
+  @HttpCode(HttpStatus.CREATED)
   @Auth()
   @Post(':productId/:storeId')
   async create(
@@ -37,7 +38,7 @@ export class ReviewController {
     return this.reviewService.create(userId, productId, storeId, dto);
   }
 
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Auth()
   @Delete(':id')
   async delete(@Param('id') id: string, @CurrentUser('id') userId: string) {

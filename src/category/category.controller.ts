@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -31,7 +32,7 @@ export class CategoryController {
   }
 
   @UsePipes(new ValidationPipe())
-  @HttpCode(200)
+  @HttpCode(HttpStatus.CREATED)
   @Auth()
   @Post(':storeId')
   async create(@Param('storeId') storeId: string, @Body() dto: CategoryDto) {
@@ -39,14 +40,14 @@ export class CategoryController {
   }
 
   @UsePipes(new ValidationPipe())
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Auth()
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: CategoryDto) {
     return this.categoryService.update(id, dto);
   }
 
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Auth()
   @Delete(':id')
   async delete(@Param('id') id: string) {

@@ -1,6 +1,7 @@
 import {
   Controller,
   HttpCode,
+  HttpStatus,
   Post,
   Query,
   UploadedFiles,
@@ -14,7 +15,7 @@ import { Auth } from '../auth/decorators/auth.decorator';
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @UseInterceptors(FilesInterceptor('files'))
   @Auth()
   @Post()
