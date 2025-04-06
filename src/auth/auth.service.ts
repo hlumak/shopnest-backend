@@ -8,8 +8,9 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { PrismaService } from '../prisma.service';
 import { AuthDto } from './dto/auth.dto';
-import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { FastifyReply } from 'fastify';
+import { OAuthUserData } from './auth.interface';
 
 @Injectable()
 export class AuthService {
@@ -77,9 +78,7 @@ export class AuthService {
     return user;
   }
 
-  async validateOAuthLogin(req: {
-    user: { email: string; name: string; picture: string };
-  }) {
+  async validateOAuthLogin(req: OAuthUserData) {
     let user = await this.userService.getByEmail(req.user.email);
 
     if (!user) {
@@ -106,26 +105,28 @@ export class AuthService {
     return { user, ...tokens };
   }
 
-  addRefreshTokenToResponse(res: Response, refreshToken: string) {
+  addRefreshTokenToResponse(res: FastifyReply, refreshToken: string) {
     const expiresIn = new Date();
     expiresIn.setDate(expiresIn.getDate() + this.EXPIRE_DAY_REFRESH_TOKEN);
 
-    res.cookie(this.REFRESH_TOKEN_NAME, refreshToken, {
+    res.setCookie(this.REFRESH_TOKEN_NAME, refreshToken, {
       httpOnly: true,
       domain: this.configService.get('SERVER_DOMAIN'),
       expires: expiresIn,
       secure: true,
-      sameSite: 'none'
+      sameSite: 'none',
+      path: '/'
     });
   }
 
-  removeRefreshTokenFromResponse(res: Response) {
-    res.cookie(this.REFRESH_TOKEN_NAME, '', {
+  removeRefreshTokenFromResponse(res: FastifyReply) {
+    res.setCookie(this.REFRESH_TOKEN_NAME, '', {
       httpOnly: true,
       domain: this.configService.get('SERVER_DOMAIN'),
       expires: new Date(0),
       secure: true,
-      sameSite: 'none'
+      sameSite: 'none',
+      path: '/'
     });
   }
 }

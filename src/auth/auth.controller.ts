@@ -8,15 +8,14 @@ import {
   Req,
   Res,
   UnauthorizedException,
-  UseGuards,
   UsePipes,
   ValidationPipe
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
-import { Response } from 'express';
-import { AuthGuard } from '@nestjs/passport';
 import { RequestWithCookies } from './request-with-cookies.interface';
+import { FastifyReply, FastifyRequest } from 'fastify';
+import { GoogleUserInfo, OAuthUserData } from './auth.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -25,7 +24,10 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  async login(@Body() dto: AuthDto, @Res({ passthrough: true }) res: Response) {
+  async login(
+    @Body() dto: AuthDto,
+    @Res({ passthrough: true }) res: FastifyReply
+  ) {
     const { refreshToken, ...response } = await this.authService.login(dto);
 
     this.authService.addRefreshTokenToResponse(res, refreshToken);
@@ -38,7 +40,7 @@ export class AuthController {
   @Post('register')
   async register(
     @Body() dto: AuthDto,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: FastifyReply
   ) {
     const { refreshToken, ...response } = await this.authService.register(dto);
 
@@ -52,7 +54,7 @@ export class AuthController {
   @Post('login/access-token')
   async getNewTokens(
     @Req() req: RequestWithCookies,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: FastifyReply
   ) {
     const refreshTokenFromCookies =
       req.cookies[this.authService.REFRESH_TOKEN_NAME];
@@ -72,31 +74,51 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('logout')
-  logout(@Res({ passthrough: true }) res: Response) {
+  logout(@Res({ passthrough: true }) res: FastifyReply) {
     this.authService.removeRefreshTokenFromResponse(res);
     return true;
   }
 
-  @Get('google')
-  @UseGuards(AuthGuard('google'))
-  async googleAuth() {}
-
   @Get('google/callback')
-  @UseGuards(AuthGuard('google'))
   async googleAuthCallback(
-    @Req()
-    req: {
-      user: { email: string; name: string; picture: string };
-    },
-    @Res({ passthrough: true }) res: Response
+    @Req() req: FastifyRequest,
+    @Res({ passthrough: true }) res: FastifyReply
   ) {
+    const fastifyInstance = req.server;
+
+    const tokenResponse =
+      await fastifyInstance.googleOAuth2.getAccessTokenFromAuthorizationCodeFlow(
+        req
+      );
+
+    const userInfoResponse = await fetch(
+      'https://www.googleapis.com/oauth2/v3/userinfo',
+      {
+        headers: {
+          Authorization: `Bearer ${tokenResponse.token.access_token}`
+        }
+      }
+    );
+
+    const userInfo = (await userInfoResponse.json()) as GoogleUserInfo;
+
+    const userData: OAuthUserData = {
+      user: {
+        email: userInfo.email,
+        name: userInfo.name,
+        picture: userInfo.picture
+      }
+    };
+
     const { refreshToken, ...response } =
-      await this.authService.validateOAuthLogin(req);
+      await this.authService.validateOAuthLogin(userData);
 
     this.authService.addRefreshTokenToResponse(res, refreshToken);
 
-    return res.redirect(
-      `${process.env['CLIENT_URL']}/dashboard?accessToken=${response.accessToken}`
-    );
+    return res
+      .status(302)
+      .redirect(
+        `${process.env.CLIENT_URL}/dashboard?accessToken=${response.accessToken}`
+      );
   }
 }

@@ -4,12 +4,13 @@ import {
   HttpStatus,
   Post,
   Query,
-  UploadedFiles,
+  Req,
   UseInterceptors
 } from '@nestjs/common';
 import { FileService } from './file.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Auth } from '../auth/decorators/auth.decorator';
+import { FastifyRequest } from 'fastify';
 
 @Controller('files')
 export class FileController {
@@ -20,9 +21,10 @@ export class FileController {
   @Auth()
   @Post()
   async saveFiles(
-    @UploadedFiles() files: Express.Multer.File[],
+    @Req() req: FastifyRequest,
     @Query('folder') folder?: string
   ) {
+    const files = req.files();
     return this.fileService.saveFiles(files, folder);
   }
 }
