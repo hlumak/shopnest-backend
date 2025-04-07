@@ -34,7 +34,7 @@ async function bootstrap() {
     exposedHeaders: 'set-cookie'
   });
 
-  const PORT = process.env.PORT || 5000;
-  await app.listen(PORT);
+  const PORT = process.env.PORT || 4200;
+  await app.listen(PORT, '0.0.0.0');
 }
 void bootstrap();
