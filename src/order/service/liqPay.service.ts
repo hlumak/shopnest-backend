@@ -2,7 +2,7 @@ import * as crypto from 'crypto';
 import { CheckoutDto } from '../dto/checkout.dto';
 import { CheckoutOptions } from '../checkout-options.interface';
 
-export class LiqpayService {
+export class LiqPayService {
   createCheckout(options: CheckoutOptions): CheckoutDto {
     const { action, amount, currency, description, orderId } = options;
 

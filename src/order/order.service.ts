@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { LiqpayService } from './service/liqpay.service';
+import { LiqPayService } from './service/liqPay.service';
 import { OrderDto } from './dto/order.dto';
 import { EnumOrderStatus } from '@prisma/client';
 import { PaymentDto } from './dto/payment.dto';
@@ -10,7 +10,7 @@ import { Currency, PaymentAction } from './constants';
 export class OrderService {
   constructor(
     private prisma: PrismaService,
-    private liqpayService: LiqpayService
+    private liqPayService: LiqPayService
   ) {}
 
   async createPayment(dto: OrderDto, userId: string) {
@@ -48,7 +48,7 @@ export class OrderService {
       }
     });
 
-    return this.liqpayService.createCheckout({
+    return this.liqPayService.createCheckout({
       action: PaymentAction.Pay,
       amount: total,
       currency: Currency.UAH,
