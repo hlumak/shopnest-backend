@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { LiqPayService } from './service/liqPay.service';
 import { OrderDto } from './dto/order.dto';
-import { EnumOrderStatus } from '@prisma/client';
 import { PaymentDto } from './dto/payment.dto';
 import { Currency, PaymentAction } from './constants';
+import { EnumOrderStatus } from 'src/generated/prisma';
 
 @Injectable()
 export class OrderService {
