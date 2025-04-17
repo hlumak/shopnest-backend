@@ -4,7 +4,7 @@ import { LiqPayService } from './service/liqPay.service';
 import { OrderDto } from './dto/order.dto';
 import { PaymentDto } from './dto/payment.dto';
 import { Currency, PaymentAction } from './constants';
-import { EnumOrderStatus } from 'src/generated/prisma';
+import { EnumOrderStatus } from '@prisma/client';
 
 @Injectable()
 export class OrderService {
