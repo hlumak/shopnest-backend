@@ -1,1 +1,2 @@
-web: npx prisma generate && npm run start:prod
+web: npm run start:prod
+postinstall: npx prisma generate
