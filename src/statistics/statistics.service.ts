@@ -32,10 +32,10 @@ export class StatisticsService {
     const averageRating = await this.calculateAverageRating(storeId);
 
     return [
-      { id: 1, name: 'Revenue', value: totalRevenue },
-      { id: 2, name: 'Products', value: productsCount },
-      { id: 3, name: 'Categories', value: categoriesCount },
-      { id: 4, name: 'Average rating', value: averageRating || 0 }
+      { id: 1, name: 'Прибуток', value: totalRevenue },
+      { id: 2, name: 'Продукти', value: productsCount },
+      { id: 3, name: 'Категорії', value: categoriesCount },
+      { id: 4, name: 'Середній рейтинг', value: averageRating || 0 }
     ];
   }
 

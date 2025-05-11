@@ -1,7 +1,9 @@
 import {
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   Query,
   Req
@@ -9,6 +11,8 @@ import {
 import { FileService } from './file.service';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { FastifyRequest } from 'fastify';
+import { path } from 'app-root-path';
+import * as fs from 'fs-extra';
 
 @Controller('files')
 export class FileController {
@@ -23,5 +27,19 @@ export class FileController {
   ) {
     const files = req.files();
     return this.fileService.saveFiles(files, folder);
+  }
+
+  @Get('uploads/:folder/:filename')
+  async checkFileExists(
+    @Param('folder') folder: string,
+    @Param('filename') filename: string
+  ) {
+    const filePath = `${path}/uploads/${folder}/${filename}`;
+    const exists = await fs.pathExists(filePath);
+    return {
+      exists,
+      path: filePath,
+      url: `/uploads/${folder}/${filename}`
+    };
   }
 }

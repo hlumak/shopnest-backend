@@ -8,25 +8,43 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getById(id: string) {
-    return this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id },
       include: {
         stores: true,
-        favorites: { select: { product: true } },
+        favorites: {
+          include: {
+            product: {
+              include: {
+                category: true,
+                color: true,
+                reviews: true
+              }
+            }
+          }
+        },
         orders: true
       }
     });
+
+    return this.transformFavorites(user);
   }
 
   async getByEmail(email: string) {
-    return this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { email },
       include: {
         stores: true,
-        favorites: { select: { product: true } },
+        favorites: {
+          include: {
+            product: true
+          }
+        },
         orders: true
       }
     });
+
+    return this.transformFavorites(user);
   }
 
   async toggleFavorite(productId: string, userId: string) {
@@ -62,5 +80,13 @@ export class UserService {
         password: await hash(dto.password)
       }
     });
+  }
+
+  private transformFavorites(user: any) {
+    if (user) {
+      const favoriteProducts = user.favorites.map(favorite => favorite.product);
+      return { ...user, favorites: favoriteProducts };
+    }
+    return user;
   }
 }
