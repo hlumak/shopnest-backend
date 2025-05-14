@@ -204,7 +204,7 @@ async function main() {
           title: 'Samsung Galaxy S24',
           description: 'Feature-packed Android smartphone',
           price: 899,
-          images: ['/uploads/products/samsung.jpg'],
+          images: ['/uploads/products/samsung.webp'],
           storeId: stores[0].id,
           categoryId: categories[0].id,
           colorId: colors[1].id
@@ -215,7 +215,7 @@ async function main() {
           title: 'MacBook Pro M3',
           description: 'Powerful laptop for professionals',
           price: 1499,
-          images: ['/uploads/products/macbook.jpg'],
+          images: ['/uploads/products/macbook.webp'],
           storeId: stores[0].id,
           categoryId: categories[1].id,
           colorId: colors[2].id
@@ -226,7 +226,7 @@ async function main() {
           title: 'AirPods Pro',
           description: 'Wireless earbuds with noise cancellation',
           price: 249,
-          images: ['/uploads/products/airpods.jpg'],
+          images: ['/uploads/products/airpods.webp'],
           storeId: stores[0].id,
           categoryId: categories[2].id,
           colorId: colors[1].id
@@ -237,7 +237,7 @@ async function main() {
           title: "Men's Casual Shirt",
           description: 'Comfortable cotton shirt for everyday wear',
           price: 45,
-          images: ['/uploads/products/shirt.jpg'],
+          images: ['/uploads/products/shirt.webp'],
           storeId: stores[1].id,
           categoryId: categories[3].id,
           colorId: colors[4].id
@@ -248,7 +248,7 @@ async function main() {
           title: "Women's Summer Dress",
           description: 'Light and elegant summer dress',
           price: 65,
-          images: ['/uploads/products/dress.jpg'],
+          images: ['/uploads/products/dress.webp'],
           storeId: stores[1].id,
           categoryId: categories[4].id,
           colorId: colors[3].id
@@ -259,7 +259,7 @@ async function main() {
           title: 'Wooden Coffee Table',
           description: 'Elegant coffee table for your living room',
           price: 299,
-          images: ['/uploads/products/table.jpg'],
+          images: ['/uploads/products/table.webp'],
           storeId: stores[2].id,
           categoryId: categories[5].id,
           colorId: colors[6].id
@@ -270,7 +270,7 @@ async function main() {
           title: 'Kitchen Utensil Set',
           description: 'Complete set of kitchen utensils',
           price: 89,
-          images: ['/uploads/products/utensils.jpg'],
+          images: ['/uploads/products/utensils.webp'],
           storeId: stores[2].id,
           categoryId: categories[6].id,
           colorId: colors[2].id

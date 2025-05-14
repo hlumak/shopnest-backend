@@ -31,7 +31,8 @@ async function bootstrap() {
   app.enableCors({
     origin: [process.env.CLIENT_URL || 'http://localhost:3000'],
     credentials: true,
-    exposedHeaders: 'set-cookie'
+    exposedHeaders: 'set-cookie',
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE']
   });
 
   const PORT = process.env.PORT || 4200;
