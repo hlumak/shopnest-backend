@@ -118,7 +118,7 @@ export class AuthController {
     return res
       .status(302)
       .redirect(
-        `${process.env.CLIENT_URL}/dashboard?accessToken=${response.accessToken}`
+        `${process.env.CLIENT_URL}/oauth-success?accessToken=${response.accessToken}`
       );
   }
 }
