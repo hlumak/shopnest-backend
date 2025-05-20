@@ -115,10 +115,18 @@ export class AuthController {
 
     this.authService.addRefreshTokenToResponse(res, refreshToken);
 
-    return res
-      .status(302)
-      .redirect(
-        `${process.env.CLIENT_URL}/dashboard?accessToken=${response.accessToken}`
-      );
+    return res.type('text/html').send(`
+    <html>
+      <head>
+        <meta http-equiv="refresh" content="0; url=${process.env.CLIENT_URL}/oauth-success?accessToken=${response.accessToken}">
+        <script>
+          window.location.href = "${process.env.CLIENT_URL}/oauth-success?accessToken=${response.accessToken}";
+        </script>
+      </head>
+      <body>
+        Redirecting...
+      </body>
+    </html>
+  `);
   }
 }
