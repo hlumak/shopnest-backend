@@ -7,6 +7,8 @@ import {
 import fastifyCookie from '@fastify/cookie';
 import fastifyMultipart from '@fastify/multipart';
 import oauth2Plugin from './plugins/oauth2.plugin';
+import { path } from 'app-root-path';
+import fastifyStatic from '@fastify/static';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -26,6 +28,11 @@ async function bootstrap() {
     limits: {
       fileSize: 5 * 1024 * 1024
     }
+  });
+
+  await fastifyInstance.register(fastifyStatic, {
+    root: `${path}/uploads`,
+    prefix: '/uploads'
   });
 
   app.enableCors({
