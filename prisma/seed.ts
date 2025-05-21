@@ -192,7 +192,7 @@ async function main() {
         data: {
           title: 'iPhone 15 Pro',
           description: 'Latest Apple iPhone with powerful features',
-          price: 999,
+          price: 999.99,
           images: ['/uploads/products/iphone.webp'],
           storeId: stores[0].id,
           categoryId: categories[0].id,

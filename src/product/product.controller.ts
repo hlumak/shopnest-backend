@@ -62,7 +62,7 @@ export class ProductController {
   @UsePipes(new ValidationPipe())
   @HttpCode(HttpStatus.OK)
   @Auth()
-  @Put('id')
+  @Put(':id')
   async update(@Param('id') id: string, @Body() dto: ProductDto) {
     return this.productService.update(id, dto);
   }

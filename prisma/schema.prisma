@@ -2,10 +2,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator dbml {
-  provider = "prisma-dbml-generator"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -61,7 +57,7 @@ model Product {
 
   title       String
   description String
-  price       Int
+  price       Float
   images      String[]
 
   reviews    Review[]
