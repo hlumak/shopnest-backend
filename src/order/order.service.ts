@@ -14,25 +14,52 @@ export class OrderService {
   ) {}
 
   async createPayment(dto: OrderDto, userId: string) {
-    const orderItems = dto.items.map(item => ({
-      quantity: item.quantity,
-      price: Math.round(Number(item.price) * 100) / 100,
-      product: {
-        connect: {
-          id: item.productId
+    console.log('Creating payment with dto:', JSON.stringify(dto, null, 2));
+    console.log('User ID:', userId);
+
+    dto.items.forEach((item, index) => {
+      console.log(
+        `Item ${index}: price type = ${typeof item.price}, value = ${item.price}`
+      );
+    });
+
+    const orderItems = dto.items.map(item => {
+      const originalPrice = item.price;
+      const numberPrice = Number(item.price);
+      const roundedPrice = Math.round(numberPrice * 100) / 100;
+
+      console.log(
+        `Item processing: original=${originalPrice} (${typeof originalPrice}), number=${numberPrice}, rounded=${roundedPrice}`
+      );
+
+      return {
+        quantity: item.quantity,
+        price: roundedPrice,
+        product: {
+          connect: {
+            id: item.productId
+          }
+        },
+        store: {
+          connect: {
+            id: item.storeId
+          }
         }
-      },
-      store: {
-        connect: {
-          id: item.storeId
-        }
-      }
-    }));
+      };
+    });
+
+    console.log('Final order items:', JSON.stringify(orderItems, null, 2));
 
     const total = orderItems.reduce((acc, item) => {
-      return acc + item.price * item.quantity;
+      const itemTotal = item.price * item.quantity;
+      console.log(
+        `Item total calculation: ${item.price} * ${item.quantity} = ${itemTotal}`
+      );
+      return acc + itemTotal;
     }, 0);
     const roundedTotal = Math.round(total * 100) / 100;
+
+    console.log(`Total calculation: raw=${total}, rounded=${roundedTotal}`);
 
     const order = await this.prisma.order.create({
       data: {
@@ -48,6 +75,9 @@ export class OrderService {
         }
       }
     });
+
+    console.log('Order created with total:', order.total);
+    console.log('Full order object:', JSON.stringify(order, null, 2));
 
     return this.liqPayService.createCheckout({
       action: PaymentAction.Pay,
