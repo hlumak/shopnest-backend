@@ -58,6 +58,7 @@ export class OrderService {
   }
 
   async updateStatus(paymentData: PaymentDto) {
+    console.log('Payment data received:', paymentData);
     const { order_id, status, amount } = paymentData;
 
     let orderStatus: EnumOrderStatus = EnumOrderStatus.PENDING;
