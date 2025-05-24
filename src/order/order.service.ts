@@ -15,7 +15,6 @@ export class OrderService {
   ) {}
 
   async createPayment(dto: OrderDto, userId: string) {
-    console.log('Dto:', dto);
     const orderItems = dto.items.map(item => ({
       quantity: item.quantity,
       price: new Decimal(item.price),
@@ -30,12 +29,10 @@ export class OrderService {
         }
       }
     }));
-    console.log('Order Items:', orderItems);
 
     const total = orderItems.reduce((acc, item) => {
       return acc.plus(item.price.mul(item.quantity));
     }, new Decimal(0));
-    console.log('Total:', total.toString());
 
     const order = await this.prisma.order.create({
       data: {
@@ -51,7 +48,6 @@ export class OrderService {
         }
       }
     });
-    console.log('Order Created:', order);
 
     return this.liqPayService.createCheckout({
       action: PaymentAction.Pay,
