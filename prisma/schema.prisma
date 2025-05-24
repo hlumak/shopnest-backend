@@ -147,7 +147,7 @@ model Order {
   status EnumOrderStatus @default(PENDING)
 
   items OrderItem[]
-  total Int
+  total Float
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
@@ -161,7 +161,7 @@ model OrderItem {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   quantity Int
-  price    Int
+  price    Float
 
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId String @map("order_id")

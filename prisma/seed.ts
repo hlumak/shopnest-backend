@@ -203,7 +203,7 @@ async function main() {
         data: {
           title: 'Samsung Galaxy S24',
           description: 'Feature-packed Android smartphone',
-          price: 899,
+          price: 899.0,
           images: ['/uploads/products/samsung.webp'],
           storeId: stores[0].id,
           categoryId: categories[0].id,
@@ -214,7 +214,7 @@ async function main() {
         data: {
           title: 'MacBook Pro M3',
           description: 'Powerful laptop for professionals',
-          price: 1499,
+          price: 1499.0,
           images: ['/uploads/products/macbook.webp'],
           storeId: stores[0].id,
           categoryId: categories[1].id,
@@ -225,7 +225,7 @@ async function main() {
         data: {
           title: 'AirPods Pro',
           description: 'Wireless earbuds with noise cancellation',
-          price: 249,
+          price: 249.0,
           images: ['/uploads/products/airpods.webp'],
           storeId: stores[0].id,
           categoryId: categories[2].id,
@@ -236,7 +236,7 @@ async function main() {
         data: {
           title: "Men's Casual Shirt",
           description: 'Comfortable cotton shirt for everyday wear',
-          price: 45,
+          price: 45.0,
           images: ['/uploads/products/shirt.webp'],
           storeId: stores[1].id,
           categoryId: categories[3].id,
@@ -247,7 +247,7 @@ async function main() {
         data: {
           title: "Women's Summer Dress",
           description: 'Light and elegant summer dress',
-          price: 65,
+          price: 65.0,
           images: ['/uploads/products/dress.webp'],
           storeId: stores[1].id,
           categoryId: categories[4].id,
@@ -258,7 +258,7 @@ async function main() {
         data: {
           title: 'Wooden Coffee Table',
           description: 'Elegant coffee table for your living room',
-          price: 299,
+          price: 299.0,
           images: ['/uploads/products/table.webp'],
           storeId: stores[2].id,
           categoryId: categories[5].id,
@@ -269,7 +269,7 @@ async function main() {
         data: {
           title: 'Kitchen Utensil Set',
           description: 'Complete set of kitchen utensils',
-          price: 89,
+          price: 89.0,
           images: ['/uploads/products/utensils.webp'],
           storeId: stores[2].id,
           categoryId: categories[6].id,
@@ -358,18 +358,18 @@ async function main() {
         data: {
           status: EnumOrderStatus.PAID,
           userId: users[1].id,
-          total: 1248,
+          total: 1248.99,
           items: {
             create: [
               {
                 quantity: 1,
-                price: 999,
+                price: 999.99,
                 productId: products[0].id,
                 storeId: stores[0].id
               },
               {
                 quantity: 1,
-                price: 249,
+                price: 249.0,
                 productId: products[3].id,
                 storeId: stores[0].id
               }
@@ -381,12 +381,12 @@ async function main() {
         data: {
           status: EnumOrderStatus.PENDING,
           userId: users[0].id,
-          total: 65,
+          total: 65.0,
           items: {
             create: [
               {
                 quantity: 1,
-                price: 65,
+                price: 65.0,
                 productId: products[5].id,
                 storeId: stores[1].id
               }
@@ -398,18 +398,18 @@ async function main() {
         data: {
           status: EnumOrderStatus.PAID,
           userId: users[2].id,
-          total: 388,
+          total: 388.0,
           items: {
             create: [
               {
                 quantity: 1,
-                price: 299,
+                price: 299.0,
                 productId: products[6].id,
                 storeId: stores[2].id
               },
               {
                 quantity: 1,
-                price: 89,
+                price: 89.0,
                 productId: products[7].id,
                 storeId: stores[2].id
               }
