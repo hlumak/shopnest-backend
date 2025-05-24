@@ -17,7 +17,7 @@ export class OrderService {
     console.log('Creating payment with dto:', dto);
     const orderItems = dto.items.map(item => ({
       quantity: item.quantity,
-      price: item.price,
+      price: Number(item.price),
       product: {
         connect: {
           id: item.productId
@@ -42,7 +42,7 @@ export class OrderService {
         items: {
           create: orderItems
         },
-        total,
+        total: Number(total),
         user: {
           connect: {
             id: userId
