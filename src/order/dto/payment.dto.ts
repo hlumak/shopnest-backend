@@ -1,5 +1,5 @@
 export class PaymentDto {
   order_id: string;
-  total: number;
+  amount: number;
   status: string;
 }
