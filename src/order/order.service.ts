@@ -14,10 +14,9 @@ export class OrderService {
   ) {}
 
   async createPayment(dto: OrderDto, userId: string) {
-    console.log('Creating payment with dto:', dto);
     const orderItems = dto.items.map(item => ({
       quantity: item.quantity,
-      price: Number(item.price),
+      price: Math.round(Number(item.price) * 100) / 100,
       product: {
         connect: {
           id: item.productId
@@ -29,12 +28,11 @@ export class OrderService {
         }
       }
     }));
-    console.log('Order items:', orderItems);
 
-    const total = dto.items.reduce((acc, item) => {
+    const total = orderItems.reduce((acc, item) => {
       return acc + item.price * item.quantity;
     }, 0);
-    console.log('Total amount:', total);
+    const roundedTotal = Math.round(total * 100) / 100;
 
     const order = await this.prisma.order.create({
       data: {
@@ -42,7 +40,7 @@ export class OrderService {
         items: {
           create: orderItems
         },
-        total: Number(total),
+        total: roundedTotal,
         user: {
           connect: {
             id: userId
@@ -50,11 +48,10 @@ export class OrderService {
         }
       }
     });
-    console.log('Order created:', order);
 
     return this.liqPayService.createCheckout({
       action: PaymentAction.Pay,
-      amount: total,
+      amount: roundedTotal,
       currency: Currency.UAH,
       description: `Order payment in ShopNest. Payment id: #${order.id}`,
       orderId: order.id
