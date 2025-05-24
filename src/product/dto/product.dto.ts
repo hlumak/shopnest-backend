@@ -1,4 +1,10 @@
-import { ArrayMinSize, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString
+} from 'class-validator';
 
 export class ProductDto {
   @IsString({ message: 'Title is required' })
@@ -17,11 +23,11 @@ export class ProductDto {
   @ArrayMinSize(1, { message: 'Must be at least one picture' })
   images: string[];
 
-  @IsString({ message: 'Category is required' })
-  @IsNotEmpty({ message: 'Category id can not be empty' })
-  categoryId: string;
+  @IsOptional()
+  @IsString({ message: 'Category must be a string' })
+  categoryId?: string;
 
-  @IsString({ message: 'Color is required' })
-  @IsNotEmpty({ message: 'Color id can not be empty' })
-  colorId: string;
+  @IsOptional()
+  @IsString({ message: 'Color must be a string' })
+  colorId?: string;
 }

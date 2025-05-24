@@ -137,11 +137,34 @@ export class ProductService {
   }
 
   async create(storeId: string, dto: ProductDto) {
+    const data: {
+      title: string;
+      description: string;
+      price: number;
+      images: string[];
+      storeId: string;
+      categoryId?: string;
+      colorId?: string;
+    } = {
+      title: dto.title,
+      description: dto.description,
+      price: dto.price,
+      images: dto.images,
+      storeId
+    };
+
+    // Добавляем categoryId только если он предоставлен
+    if (dto.categoryId) {
+      data.categoryId = dto.categoryId;
+    }
+
+    // Добавляем colorId только если он предоставлен
+    if (dto.colorId) {
+      data.colorId = dto.colorId;
+    }
+
     return this.prisma.product.create({
-      data: {
-        ...dto,
-        storeId
-      }
+      data
     });
   }
 
