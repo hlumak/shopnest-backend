@@ -14,6 +14,7 @@ export class OrderService {
   ) {}
 
   async createPayment(dto: OrderDto, userId: string) {
+    console.log('Creating payment with dto:', dto);
     const orderItems = dto.items.map(item => ({
       quantity: item.quantity,
       price: item.price,
