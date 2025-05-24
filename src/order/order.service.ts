@@ -29,10 +29,12 @@ export class OrderService {
         }
       }
     }));
+    console.log('Order items:', orderItems);
 
     const total = dto.items.reduce((acc, item) => {
       return acc + item.price * item.quantity;
     }, 0);
+    console.log('Total amount:', total);
 
     const order = await this.prisma.order.create({
       data: {
@@ -48,6 +50,7 @@ export class OrderService {
         }
       }
     });
+    console.log('Order created:', order);
 
     return this.liqPayService.createCheckout({
       action: PaymentAction.Pay,
