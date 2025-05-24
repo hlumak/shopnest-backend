@@ -58,7 +58,6 @@ export class OrderService {
   }
 
   async updateStatus(paymentData: PaymentDto) {
-    console.log('Payment data received:', paymentData);
     const { order_id, status, amount } = paymentData;
 
     let orderStatus: EnumOrderStatus = EnumOrderStatus.PENDING;
@@ -66,11 +65,11 @@ export class OrderService {
     else if (status === 'failure' || status === 'error')
       orderStatus = EnumOrderStatus.FAILED;
 
+    console.log(amount, typeof amount);
+
     await this.prisma.order.update({
       where: { id: order_id },
       data: { status: orderStatus, total: amount }
     });
-
-    console.log(`Order ${order_id} updated to status: ${orderStatus}`);
   }
 }
