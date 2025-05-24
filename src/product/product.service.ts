@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { ProductDto } from './dto/product.dto';
+import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class ProductService {
@@ -140,7 +141,7 @@ export class ProductService {
     const data: {
       title: string;
       description: string;
-      price: number;
+      price: Decimal;
       images: string[];
       storeId: string;
       categoryId?: string;
@@ -148,7 +149,7 @@ export class ProductService {
     } = {
       title: dto.title,
       description: dto.description,
-      price: dto.price,
+      price: new Decimal(dto.price),
       images: dto.images,
       storeId
     };
@@ -171,9 +172,14 @@ export class ProductService {
   async update(id: string, dto: ProductDto) {
     await this.getById(id);
 
+    const updateData = {
+      ...dto,
+      price: new Decimal(dto.price)
+    };
+
     return this.prisma.product.update({
       where: { id },
-      data: dto
+      data: updateData
     });
   }
 

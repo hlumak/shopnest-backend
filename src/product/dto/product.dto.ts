@@ -1,7 +1,8 @@
+import { Decimal } from '@prisma/client/runtime/library';
 import {
   ArrayMinSize,
+  IsDecimal,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString
 } from 'class-validator';
@@ -15,9 +16,9 @@ export class ProductDto {
   @IsNotEmpty({ message: 'Description can not be empty' })
   description: string;
 
-  @IsNumber({}, { message: 'Price must be a number' })
+  @IsDecimal({}, { message: 'Price must be a decimal number' })
   @IsNotEmpty({ message: 'Price can not be empty' })
-  price: number;
+  price: Decimal;
 
   @IsString({ message: 'Specify at least one picture', each: true })
   @ArrayMinSize(1, { message: 'Must be at least one picture' })

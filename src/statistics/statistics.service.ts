@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
 import { PrismaService } from '../prisma.service';
+import { Decimal } from '@prisma/client/runtime/library';
 
 // dayjs.locale('uk');
 
@@ -63,12 +64,14 @@ export class StatisticsService {
       }
     });
 
-    return orders.reduce((acc, order) => {
-      const total = order.items.reduce((itemAcc, item) => {
-        return itemAcc + item.price * item.quantity;
-      }, 0);
-      return acc + total;
-    }, 0);
+    return orders
+      .reduce((acc, order) => {
+        const total = order.items.reduce((itemAcc, item) => {
+          return itemAcc.plus(item.price.mul(item.quantity));
+        }, new Decimal(0));
+        return acc.plus(total);
+      }, new Decimal(0))
+      .toNumber();
   }
 
   private async countProducts(storeId: string) {
@@ -115,9 +118,11 @@ export class StatisticsService {
     salesRaw.forEach(order => {
       const formattedDate = formatDate(new Date(order.createdAt));
 
-      const total = order.items.reduce((total, item) => {
-        return total + item.price * item.quantity;
-      }, 0);
+      const total = order.items
+        .reduce((total, item) => {
+          return total.plus(item.price.mul(item.quantity));
+        }, new Decimal(0))
+        .toNumber();
 
       if (salesByDate.has(formattedDate)) {
         salesByDate.set(formattedDate, salesByDate.get(formattedDate)! + total);
@@ -161,9 +166,11 @@ export class StatisticsService {
     return lastUsers.map(user => {
       const lastOrder = user.orders[user.orders.length - 1];
 
-      const total = lastOrder.items.reduce((total, item) => {
-        return total + item.price;
-      }, 0);
+      const total = lastOrder.items
+        .reduce((total, item) => {
+          return total.plus(item.price);
+        }, new Decimal(0))
+        .toNumber();
 
       return {
         id: user.id,

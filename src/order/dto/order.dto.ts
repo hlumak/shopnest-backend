@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsDecimal,
   IsEnum,
   IsNumber,
   IsOptional,
@@ -8,6 +9,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { EnumOrderStatus } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime/library';
 
 export class OrderDto {
   @IsOptional()
@@ -28,8 +30,8 @@ export class OrderItemDto {
   @IsNumber({}, { message: 'Quantity must be a number' })
   quantity: number;
 
-  @IsNumber({}, { message: 'Price must be a number' })
-  price: number;
+  @IsDecimal({}, { message: 'Price must be a decimal number' })
+  price: Decimal;
 
   @IsString({ message: 'Product id must be a string' })
   productId: string;

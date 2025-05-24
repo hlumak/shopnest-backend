@@ -1,5 +1,7 @@
+import { Decimal } from '@prisma/client/runtime/library';
+
 export class CheckoutDto {
-  amount: number;
+  amount: Decimal;
   currency: string;
   description: string;
   resultUrl: string;
