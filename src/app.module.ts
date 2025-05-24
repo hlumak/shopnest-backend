@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ColorModule } from './color/color.module';
@@ -14,6 +15,7 @@ import { ReviewModule } from './review/review.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    ScheduleModule.forRoot(),
     AuthModule,
     UserModule,
     ColorModule,

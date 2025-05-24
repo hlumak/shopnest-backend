@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 import { PrismaService } from '../prisma.service';
 
-dayjs.locale('uk');
+// dayjs.locale('uk');
 
 const monthNames = [
   'jan',
@@ -21,7 +21,7 @@ const monthNames = [
 
 @Injectable()
 export class StatisticsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async getMainStatistics(storeId: string) {
     const totalRevenue = await this.calculateTotalRevenue(storeId);

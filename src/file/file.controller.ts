@@ -11,6 +11,7 @@ import {
   Res
 } from '@nestjs/common';
 import { FileService } from './file.service';
+import { FileCleanupService } from './file-cleanup.service';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { path } from 'app-root-path';
@@ -18,7 +19,10 @@ import * as fs from 'fs-extra';
 
 @Controller('files')
 export class FileController {
-  constructor(private readonly fileService: FileService) {}
+  constructor(
+    private readonly fileService: FileService,
+    private readonly fileCleanupService: FileCleanupService
+  ) {}
 
   @HttpCode(HttpStatus.OK)
   @Auth()
@@ -42,7 +46,9 @@ export class FileController {
     if (!exists) {
       return reply.code(404).send({ message: 'File not found' });
     }
-    return reply.sendFile(filePath);
+
+    const stream = fs.createReadStream(filePath);
+    return reply.type('image/webp').send(stream);
   }
 
   @Auth()
@@ -52,5 +58,18 @@ export class FileController {
     @Param('filename') filename: string
   ) {
     return this.fileService.deleteFile(folder, filename);
+  }
+
+  @Auth()
+  @Post('cleanup')
+  async manualCleanup() {
+    await this.fileCleanupService.manualCleanup();
+    return { message: 'Manual cleanup completed' };
+  }
+
+  @Auth()
+  @Get('cleanup/stats')
+  async getCleanupStats() {
+    return this.fileCleanupService.getCleanupStats();
   }
 }
