@@ -57,7 +57,7 @@ model Product {
 
   title       String
   description String
-  price       Decimal @db.Decimal(10, 2)
+  price       Decimal
   images      String[]
 
   reviews    Review[]
@@ -147,7 +147,7 @@ model Order {
   status EnumOrderStatus @default(PENDING)
 
   items OrderItem[]
-  total Decimal @db.Decimal(10, 2)
+  total Decimal
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
@@ -161,7 +161,7 @@ model OrderItem {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   quantity Int
-  price    Decimal @db.Decimal(10, 2)
+  price    Decimal
 
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId String @map("order_id")
