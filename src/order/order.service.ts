@@ -30,8 +30,10 @@ export class OrderService {
       }
     }));
 
-    const total = orderItems.reduce((acc, item) => {
-      return acc.plus(item.price.mul(item.quantity));
+    const total = dto.items.reduce((acc, item) => {
+      const price = new Decimal(item.price);
+      const quantity = new Decimal(item.quantity);
+      return acc.plus(price.mul(quantity));
     }, new Decimal(0));
 
     const order = await this.prisma.order.create({
