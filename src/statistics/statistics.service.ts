@@ -67,7 +67,9 @@ export class StatisticsService {
     return orders
       .reduce((acc, order) => {
         const total = order.items.reduce((itemAcc, item) => {
-          return itemAcc.plus(item.price.mul(item.quantity));
+          const price = new Decimal(item.price);
+          const quantity = new Decimal(item.quantity);
+          return itemAcc.plus(price.mul(quantity));
         }, new Decimal(0));
         return acc.plus(total);
       }, new Decimal(0))
@@ -120,7 +122,9 @@ export class StatisticsService {
 
       const total = order.items
         .reduce((total, item) => {
-          return total.plus(item.price.mul(item.quantity));
+          const price = new Decimal(item.price);
+          const quantity = new Decimal(item.quantity);
+          return total.plus(price.mul(quantity));
         }, new Decimal(0))
         .toNumber();
 
@@ -168,7 +172,8 @@ export class StatisticsService {
 
       const total = lastOrder.items
         .reduce((total, item) => {
-          return total.plus(item.price);
+          const price = new Decimal(item.price);
+          return total.plus(price);
         }, new Decimal(0))
         .toNumber();
 
